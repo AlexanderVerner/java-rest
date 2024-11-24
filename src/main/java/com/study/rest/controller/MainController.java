@@ -1,5 +1,6 @@
 package com.study.rest.controller;
 
+import com.study.rest.DTO.CatDTO;
 import com.study.rest.entity.Cat;
 import com.study.rest.repository.CatRepo;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,15 @@ public class MainController {
     private final CatRepo catRepo;
 
     @PostMapping("/api/add")
-    public void addCat(@RequestBody Cat cat) {
-        log.info("New row: " + catRepo.save(cat));
+    public void addCat(@RequestBody CatDTO catDTO) {
+        log.info(
+                "New row: " + catRepo.save(
+                        Cat.builder()
+                        .age(catDTO.getAge())
+                        .weight(catDTO.getWeight())
+                        .name(catDTO.getName())
+                        .build())
+        );
     }
 
     @SneakyThrows

@@ -3,43 +3,48 @@ package com.study.rest.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.rest.entity.Cat;
+import com.study.rest.repository.CatRepo;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@Slf4j
 @RestController
+@RequiredArgsConstructor
 public class MainController {
-    @Autowired
-    private ObjectMapper objectMapper;
 
-    @GetMapping("/api/main")
-    public String mainListener() {
-        return "Hello World";
+    private final CatRepo catRepo;
+
+    @PostMapping("/api/add")
+    public void addCat(@RequestBody Cat cat) {
+        log.info("New row: " + catRepo.save(cat));
     }
 
-    @GetMapping("api/cat")
-    public String giveCat() {
-        Cat cat = new Cat("Barsik", 5, 10);
-        String jsonData = null;
-        try {
-            jsonData = objectMapper.writeValueAsString(cat);
-        } catch (JsonProcessingException e) {
-            System.out.println("Error with cat");
-        }
-        return jsonData;
+    @SneakyThrows
+    @GetMapping("/api/all")
+    public List<Cat> getAllCats() {
+        return catRepo.findAll();
     }
 
-    @PostMapping("api/special")
-    public String giveSpecialCat(@RequestParam String name) {
-        Cat cat = new Cat(name, 5, 10);
-        String jsonData = null;
-        try {
-            jsonData = objectMapper.writeValueAsString(cat);
-        } catch (JsonProcessingException e) {
-            System.out.println("Error with cat");
+    @GetMapping("/api")
+    public Cat getCat(@RequestParam int id) {
+        return catRepo.findById(id).orElseThrow();
+    }
+
+    @DeleteMapping("/api")
+    public void deleteCat(@RequestParam int id) {
+        catRepo.deleteById(id);
+    }
+
+    @PutMapping("/api/add")
+    public String changeCat(@RequestBody Cat cat) {
+        if (!catRepo.existsById(cat.getId())) {
+            return "No such row";
         }
-        return jsonData;
+        return catRepo.save(cat).toString();
     }
 }

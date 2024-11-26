@@ -1,9 +1,10 @@
-package com.study.rest.DTO;
+package com.study.rest.dto;
 
 import lombok.Data;
 
 @Data
-public class CatDTO {
+public class CatIdDto {
+    private int id;
     private String name;
     private int weight;
     private int age;

@@ -9,6 +9,7 @@ import lombok.*;
 @Entity
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "cats")
 public class Cat {
     @Id
@@ -22,15 +23,6 @@ public class Cat {
 
     @Column(name = "mass", nullable = false)
     private int weight;
-
-    public Cat(String name, int age, int weight) {
-        this.name = name;
-        this.age = age;
-        this.weight = weight;
-    }
-
-    public Cat() {
-    }
 
     @Override
     public String toString() {

@@ -3,11 +3,13 @@ package com.study.rest.service;
 import com.study.rest.dto.CatDto;
 import com.study.rest.dto.CatIdDto;
 import com.study.rest.entity.Cat;
+import com.study.rest.exception.CatNotFoundException;
 import com.study.rest.repository.CatRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,15 +17,6 @@ import java.util.List;
 public class CatServiceImpl implements CatService {
 
     private final CatRepo catRepo;
-
-//    public static <nameDto> Object buildCat(nameDto){
-//        Cat cat = Cat.builder()
-//                .age(nameDto.getAge())
-//                .weight(nameDto.getWeight())
-//                .name(nameDto.getName())
-//                .build();
-//        return cat;
-//    }
 
     @Override
     public int addCat(CatDto catDto) {
@@ -36,33 +29,48 @@ public class CatServiceImpl implements CatService {
     }
 
     @Override
-    public List<Cat> getAllCats() {
-        return catRepo.findAll();
+    public List<CatIdDto> getAllCats() {
+        List<Cat> allCat = catRepo.findAll();
+        List<CatIdDto> catsForResponse = new ArrayList<>(allCat.size());
+        for (Cat cat : allCat) {
+            CatIdDto catDto = new CatIdDto(
+                    cat.getId(),
+                    cat.getName(),
+                    cat.getWeight(),
+                    cat.getAge()
+            );
+            catsForResponse.add(catDto);
+        }
+        return catsForResponse;
     }
 
-    @SneakyThrows
     @Override
-    public String getCatById(int id) {
-        return catRepo.findById(id).orElseThrow().toString();
+    public CatIdDto getCatById(int id) {
+        Cat cat = catRepo.findById(id)
+                .orElseThrow(() -> new CatNotFoundException(String.format("Cat with id = %s", id)));
+        return new CatIdDto(
+                cat.getId(),
+                cat.getName(),
+                cat.getWeight(),
+                cat.getAge()
+        );
     }
 
-    @SneakyThrows
     @Override
-    public String deleteCat(int id) {
+    public void deleteCat(int id) {
         catRepo.deleteById(id);
-        return "Deleted " + id;
     }
 
     @Override
-    public String updateCat(CatIdDto cat) {
+    public int updateCat(CatIdDto cat) {
         if (!catRepo.existsById(cat.getId())) {
-            return "No such row";
+            throw new CatNotFoundException(String.format("Cat with id = %s is not exist", cat.getId()));
         }
         Cat catWithId = Cat.builder()
                 .age(cat.getAge())
                 .weight(cat.getWeight())
                 .name(cat.getName())
                 .build();
-        return catRepo.save(catWithId).toString();
+        return catRepo.save(catWithId).getId();
     }
 }

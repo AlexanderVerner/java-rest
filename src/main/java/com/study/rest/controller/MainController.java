@@ -35,7 +35,7 @@ public class MainController {
     )
 
     @GetMapping("/api/all")
-    public List<Cat> getAllCats() {
+    public List<CatIdDto> getAllCats() {
         return catService.getAllCats();
     }
 
@@ -43,7 +43,7 @@ public class MainController {
             summary = "Get by id cat in DB"
     )
     @GetMapping("/api")
-    public String getCat(@RequestParam int id) {
+    public CatIdDto getCat(@RequestParam int id) {
         return catService.getCatById(id);
     }
 
@@ -52,8 +52,8 @@ public class MainController {
             description = "Find cat in database by id and delete from it"
     )
     @DeleteMapping("/api")
-    public String deleteCat(@RequestParam int id) {
-        return catService.deleteCat(id);
+    public void deleteCat(@RequestParam int id) {
+        catService.deleteCat(id);
     }
 
     @Operation(
@@ -62,7 +62,7 @@ public class MainController {
     )
 
     @PutMapping("/api/add")
-    public String changeCat(@RequestBody CatIdDto catId) {
+    public int changeCat(@RequestBody CatIdDto catId) {
         return catService.updateCat(catId);
     }
 }

@@ -24,13 +24,13 @@ public class Cat {
     @Column(name = "mass", nullable = false)
     private int weight;
 
-    @Override
-    public String toString() {
-        return "Cat{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", weight=" + weight +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Cat{" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//                ", age=" + age +
+//                ", weight=" + weight +
+//                '}';
+//    }
 }

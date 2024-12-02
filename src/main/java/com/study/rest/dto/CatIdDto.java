@@ -1,11 +1,10 @@
 package com.study.rest.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class CatIdDto {
     private int id;
     private String name;

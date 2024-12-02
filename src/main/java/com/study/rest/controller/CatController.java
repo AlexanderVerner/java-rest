@@ -2,7 +2,6 @@ package com.study.rest.controller;
 
 import com.study.rest.dto.CatDto;
 import com.study.rest.dto.CatIdDto;
-import com.study.rest.entity.Cat;
 import com.study.rest.service.CatService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,7 +15,8 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class MainController {
+@RequestMapping("/api/cat")
+public class CatController {
 
     private final CatService catService;
 
@@ -24,7 +24,7 @@ public class MainController {
             summary = "Create new cat in DB",
             description = "Get DTO cats and build and save entity in database"
     )
-    @PostMapping("/api/add")
+    @PostMapping
     public int addCat(@RequestBody CatDto catDTO) {
         return catService.addCat(catDTO);
     }
@@ -34,7 +34,7 @@ public class MainController {
             description = "Get list, with all cats in database"
     )
 
-    @GetMapping("/api/all")
+    @GetMapping
     public List<CatIdDto> getAllCats() {
         return catService.getAllCats();
     }
@@ -42,8 +42,8 @@ public class MainController {
     @Operation(
             summary = "Get by id cat in DB"
     )
-    @GetMapping("/api")
-    public CatIdDto getCat(@RequestParam int id) {
+    @GetMapping("/{id}")
+    public CatIdDto getCat(@PathVariable int id) {
         return catService.getCatById(id);
     }
 
@@ -51,7 +51,7 @@ public class MainController {
             summary = "Delete cat from DB",
             description = "Find cat in database by id and delete from it"
     )
-    @DeleteMapping("/api")
+    @DeleteMapping
     public void deleteCat(@RequestParam int id) {
         catService.deleteCat(id);
     }
@@ -61,8 +61,8 @@ public class MainController {
             description = "Method will check if the cat exists and update it or created a new one"
     )
 
-    @PutMapping("/api/add")
-    public int changeCat(@RequestBody CatIdDto catId) {
-        return catService.updateCat(catId);
+    @PutMapping("/{id}")
+    public int changeCat(@PathVariable int id, @RequestBody CatDto cat) {
+        return catService.updateCat(id, cat);
     }
 }

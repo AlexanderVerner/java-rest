@@ -10,5 +10,5 @@ public interface CatService {
     List<CatIdDto> getAllCats();
     CatIdDto getCatById(int id);
     void deleteCat(int id);
-    int updateCat(CatIdDto catId);
+    int updateCat(int id, CatDto cat);
 }
